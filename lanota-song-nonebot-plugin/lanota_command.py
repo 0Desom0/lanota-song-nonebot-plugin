@@ -1,8 +1,9 @@
 from nonebot import on_command
-from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message
+from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message, GroupMessageEvent
 from nonebot.params import CommandArg
 from nonebot.typing import T_State
 import asyncio
+import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, date
 from .config import *
@@ -16,8 +17,9 @@ from .jiaoben.fandom_pachong import main as update_songs
 command_configs = [
     ("today", "今日曲", True),
     ("random", "随机", True),
-    ("alias", "别名", True),
+    ("alias", "别名", False),  # alias命令内部再细分权限：show全员可用，add/del仅alias_groups可用
     ("find", "查找", True),
+    ("artist", "曲师", True),
     ("help", "帮助", True),
     ("time", "时长", True),
     ("all", "全部", True),
@@ -62,6 +64,7 @@ la_today = commands["la_today"]
 la_random = commands["la_random"]
 la_alias = commands["la_alias"]
 la_find = commands["la_find"]
+la_artist = commands["la_artist"]
 la_help = commands["la_help"]
 la_time = commands["la_time"]
 la_all = commands["la_all"]
@@ -321,6 +324,13 @@ async def handle_alias(bot: Bot, event: MessageEvent, state: T_State, args: Mess
         return
     
     action = parts[0].lower()
+
+    # 权限细分：show 对所有人开放；add/del 仅允许 alias_groups 群使用
+    if action != "show":
+        if not isinstance(event, GroupMessageEvent) or event.group_id not in alias_groups:
+            await send_image_or_text(user_id, la_alias, "权限不足，只有 alias_groups 白名单群可以使用 alias add/del")
+            return
+
     alias_data = load_alias_data()
     song_data = load_song_data()
     all_titles = {song['title'].lower() for song in song_data}
@@ -429,38 +439,121 @@ async def handle_alias(bot: Bot, event: MessageEvent, state: T_State, args: Mess
 @la_find.handle()
 async def handle_find(bot: Bot, event: MessageEvent, state: T_State, args: Message = CommandArg()):
     user_id = event.get_user_id()
-    search_term = args.extract_plain_text().strip()
+    raw_arg = args.extract_plain_text().strip()
     
-    if not search_term:
+    if not raw_arg:
         await send_image_or_text(user_id, la_find, "用法:\n"
-                              "/la info <搜索词> (按优先级匹配章节号、ID、别名和曲名)\n"
-                              "匹配优先级:\n"
-                              "1. 完全匹配章节号\n"
-                              "2. 完全匹配ID\n"
-                              "3. 完全匹配别名\n"
-                              "4. 完全匹配曲名\n"
-                              "5. 模糊匹配曲名或别名")
+                               "/la info <搜索词> (按优先级匹配章节号、ID、别名和曲名)\n"
+                               "/la info <搜索词> p<页码> (分页查看搜索结果)\n"
+                               "匹配优先级:\n"
+                               "1. 完全匹配章节号\n"
+                               "2. 完全匹配ID\n"
+                               "3. 完全匹配别名\n"
+                               "4. 完全匹配曲名\n"
+                               "5. 模糊匹配曲名或别名")
+        return
+
+    # 支持分页参数：/la info <搜索词> p2 或 /la info <搜索词> 页2
+    search_term = raw_arg
+    page = 1
+    page_match = re.match(r"^(.+?)\s+(?:p|page|页)\s*(\d+)$", raw_arg, re.IGNORECASE)
+    if page_match:
+        search_term = page_match.group(1).strip()
+        page = int(page_match.group(2))
+
+    if not search_term:
+        await send_image_or_text(user_id, la_find, "请提供搜索词，例如：/la info Frey p2")
         return
     
     song_data = load_song_data()
     alias_data = load_alias_data()
     
-    matched_songs, match_type, total_count = find_song_by_search_term(search_term, song_data, alias_data)
+    # 为分页拿到完整匹配结果，不在函数内部截断
+    matched_songs, match_type, total_count = find_song_by_search_term(
+        search_term, song_data, alias_data, max_display=len(song_data)
+    )
     
     if not matched_songs:
         await send_image_or_text(user_id, la_find, f"没有找到与[{search_term}]相关的乐曲")
         return
     
-    if total_count == 1:
+    if total_count == 1 and page == 1:
         message = f"通过搜索词[{search_term}]进行[{match_type}]找到这首乐曲:\n\n{format_song_info(matched_songs[0])}"
     else:
-        message = f"通过搜索词[{search_term}]进行[{match_type}]找到匹配的乐曲({total_count}首):\n"
-        for i, song in enumerate(matched_songs, 1):
+        page_size = 10
+        total_pages = (total_count + page_size - 1) // page_size
+
+        if page < 1 or page > total_pages:
+            await send_image_or_text(user_id, la_find, f"页码超出范围，当前共有{total_pages}页")
+            return
+
+        start_idx = (page - 1) * page_size
+        end_idx = min(start_idx + page_size, total_count)
+        page_songs = matched_songs[start_idx:end_idx]
+
+        message = (
+            f"通过搜索词[{search_term}]进行[{match_type}]找到匹配的乐曲({total_count}首)\n"
+            f"第{page}/{total_pages}页 (每页{page_size}首):\n"
+        )
+        for i, song in enumerate(page_songs, start_idx + 1):
             message += f"\n{i}. {song['title']} (Chapter: {song['chapter']}, ID: {song['id']})"
-        if total_count > 10:
-            message += f"\n……共{total_count}首"
+
+        if total_pages > 1 and page < total_pages:
+            message += f"\n\n下一页: /la info {search_term} p{page + 1}"
     
     await send_image_or_text(user_id, la_find, message)
+
+# 处理artist命令 - 先匹配曲师，再列出该曲师全部歌曲（不分页）
+@la_artist.handle()
+async def handle_artist(bot: Bot, event: MessageEvent, state: T_State, args: Message = CommandArg()):
+    user_id = event.get_user_id()
+    search_term = args.extract_plain_text().strip()
+
+    if not search_term:
+        await send_image_or_text(user_id, la_artist, "用法:\n"
+                              "/la artist <曲师名>\n"
+                              "/la 曲师 <曲师名>\n"
+                              "说明:\n"
+                              "1. 先按曲师名进行精确匹配（忽略大小写）\n"
+                              "2. 若无精确结果，再进行模糊匹配\n"
+                              "3. 匹配到曲师后，返回该曲师在曲库中全部歌曲（忽略大小写完全匹配，不分页）")
+        return
+
+    song_data = load_song_data()
+    if not song_data:
+        await send_image_or_text(user_id, la_artist, "没有可用的乐曲数据")
+        return
+
+    # 先查曲师（不截断）
+    matched_artists, match_type, total_artists = find_artist_by_search_term(
+        search_term, song_data, max_display=len(song_data)
+    )
+
+    if not matched_artists:
+        await send_image_or_text(user_id, la_artist, f"没有找到与曲师[{search_term}]相关的结果")
+        return
+
+    if total_artists > 1:
+        message = f"通过曲师关键词[{search_term}]进行[{match_type}]，找到多个曲师({total_artists}个):\n"
+        for i, artist in enumerate(matched_artists, 1):
+            message += f"\n{i}. {artist}"
+        await send_image_or_text(user_id, la_artist, message)
+        return
+
+    # 匹配到唯一曲师后，忽略大小写完全匹配该曲师名并返回全部歌曲
+    target_artist = matched_artists[0]
+    target_artist_lower = target_artist.lower()
+    artist_songs = [song for song in song_data if str(song.get('artist', '')).strip().lower() == target_artist_lower]
+
+    if not artist_songs:
+        await send_image_or_text(user_id, la_artist, f"已匹配曲师[{target_artist}]，但未找到其对应歌曲")
+        return
+
+    message = f"曲师[{target_artist}]的歌曲列表（共{len(artist_songs)}首）:\n"
+    for i, song in enumerate(artist_songs, 1):
+        message += f"\n{i}. {song['title']} (Chapter: {song['chapter']}, ID: {song['id']})"
+
+    await send_image_or_text(user_id, la_artist, message)
 
 # 处理time命令
 @la_time.handle()
@@ -1222,7 +1315,8 @@ help_categories = {
         "aliases": ["info", "查找", "find"],
         "commands": [
             "/la info - 查找乐曲信息",
-            "/la find - 同上"
+            "/la find - 同上",
+            "/la info <搜索词> p<页码> - 分页查看搜索结果"
         ],
         "priority": [
             "1. 完全匹配章节号",
@@ -1231,7 +1325,28 @@ help_categories = {
             "4. 完全匹配曲名",
             "5. 模糊匹配曲名或别名"
         ],
-        "examples": []
+        "examples": [
+            "/la info Frey",
+            "/la info Frey p2",
+            "/la info Frey 页3"
+        ]
+    },
+    "artist": {
+        "name": "曲师查询",
+        "aliases": ["artist", "曲师"],
+        "commands": [
+            "/la artist <曲师名> - 按曲师查歌曲",
+            "/la 曲师 <曲师名> - 同上"
+        ],
+        "priority": [
+            "1. 先进行曲师名精确匹配（忽略大小写）",
+            "2. 无精确结果时再进行曲师名模糊匹配（忽略大小写）",
+            "3. 匹配到唯一曲师后，返回该曲师名忽略大小写完全匹配的全部歌曲（不分页）"
+        ],
+        "examples": [
+            "/la artist Tiny",
+            "/la 曲师 karasu"
+        ]
     },
     "calculate": {
         "name": "定数计算功能",

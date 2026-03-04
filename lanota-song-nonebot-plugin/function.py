@@ -371,6 +371,48 @@ def find_song_by_search_term(search_term, song_data, alias_data=None, max_displa
     
     return matched_songs, match_type, total_count
 
+def find_artist_by_search_term(search_term, song_data, max_display=10):
+    """按照优先级查找曲师
+    1. 完全匹配曲师名（忽略大小写）
+    2. 模糊匹配曲师名（忽略大小写）
+    """
+    search_term_lower = search_term.strip().lower()
+    if not search_term_lower:
+        return [], None, 0
+
+    # 去重并保留原始大小写展示
+    artist_map = {}
+    for song in song_data:
+        artist = str(song.get('artist', '')).strip()
+        if not artist:
+            continue
+        key = artist.lower()
+        if key not in artist_map:
+            artist_map[key] = artist
+
+    all_artists = list(artist_map.values())
+    matched_artists = []
+    match_type = None
+
+    # 1. 精确匹配
+    exact_matches = [artist for artist in all_artists if artist.lower() == search_term_lower]
+    if exact_matches:
+        matched_artists = exact_matches
+        match_type = "曲师精确匹配"
+
+    # 2. 模糊匹配
+    if not matched_artists:
+        fuzzy_matches = [artist for artist in all_artists if search_term_lower in artist.lower()]
+        if fuzzy_matches:
+            matched_artists = fuzzy_matches
+            match_type = "曲师模糊匹配"
+
+    total_count = len(matched_artists)
+    if total_count > max_display:
+        matched_artists = matched_artists[:max_display]
+
+    return matched_artists, match_type, total_count
+
 def calculate_rating(harmony: int, tune: int, fail: int, notes: int, level: str) -> tuple:
     """计算单曲 rating"""
     try:
