@@ -12,7 +12,7 @@
     "Master": "15.6"
   },
   "4-6": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.3"
   },
   "5-2": {
@@ -25,7 +25,7 @@
     "Master": "15.3"
   },
   "5-5": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.6"
   },
   "6-5": {
@@ -35,14 +35,14 @@
     "Master": "15.2"
   },
   "6-7": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.2"
   },
   "7-4": {
     "Master": "15.7"
   },
   "7-5": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.2"
   },
   "8-3": {
@@ -55,7 +55,7 @@
     "Master": "15.3"
   },
   "8-7": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.4"
   },
   "8-8": {
@@ -63,7 +63,7 @@
     "Ultra": "15.6"
   },
   "S2-4": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "A-5": {
     "Master": "15.5"
@@ -119,6 +119,9 @@
   "M-5": {
     "Master": "15.4"
   },
+  "N-5": {
+    "Master": "15"
+  },
   "O-2": {
     "Master": "15.4"
   },
@@ -141,7 +144,7 @@
     "Master": "15.8"
   },
   "T-5": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "U-5": {
     "Master": "15.1"
@@ -150,10 +153,37 @@
     "Master": "15.95"
   },
   "V-4": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "V-5": {
     "Master": "15.5"
+  },
+  "W-4": {
+    "Master": "15.1"
+  },
+  "W-5": {
+    "Master": "15.7"
+  },
+  "X-4": {
+    "Master": "15"
+  },
+  "X-5": {
+    "Master": "15.7"
+  },
+  "Y-3": {
+    "Master": "15.1"
+  },
+  "Y-4": {
+    "Master": "15.4"
+  },
+  "Y-5": {
+    "Master": "15.7-15.8"
+  },
+  "Z-2": {
+    "Master": "15.1"
+  },
+  "Z-5": {
+    "Master": "15.9"
   },
   "Event-2": {
     "Master": "15.6"
@@ -186,13 +216,16 @@
     "Master": "15.2"
   },
   "Event-21": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "Event-23": {
     "Master": "15.2"
   },
   "Event-24": {
     "Master": "15.4"
+  },
+  "Event-26": {
+    "Master": "16"
   },
   "Event-29": {
     "Master": "15.3"
@@ -201,7 +234,7 @@
     "Master": "15.5"
   },
   "Event-35": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "Event-36": {
     "Master": "15.4"
@@ -210,13 +243,86 @@
     "Master": "15.5"
   },
   "Event-40": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.0"
   },
   "Event-43": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "Event-46": {
+    "Master": "15.7"
+  },
+  "Event-49": {
+    "Master": "15.4"
+  },
+  "Event-52": {
+    "Master": "15.8-15.9"
+  },
+  "Event-53": {
+    "Master": "15.7"
+  },
+  "Event-55": {
+    "Master": "15.7"
+  },
+  "Event-58": {
+    "Master": "15.8"
+  },
+  "Event-61": {
+    "Master": "15.95"
+  },
+  "Event-64": {
+    "Master": "15.2"
+  },
+  "Event-66": {
+    "Master": "15.3"
+  },
+  "Event-68": {
+    "Master": "15.6"
+  },
+  "Event-71": {
+    "Master": "15.7"
+  },
+  "Event-74": {
+    "Master": "15.6"
+  },
+  "Event-76": {
+    "Master": "15.3"
+  },
+  "Event-77": {
+    "Master": "15.3"
+  },
+  "Event-79": {
+    "Master": "15.7"
+  },
+  "Event-82": {
+    "Master": "15.3"
+  },
+  "Event-83": {
+    "Master": "15.5"
+  },
+  "Event-85": {
+    "Master": "16",
+    "Ultra": "15.2"
+  },
+  "Event-89": {
+    "Master": "15.7"
+  },
+  "Event-90": {
+    "Master": "15.2"
+  },
+  "Event-92": {
+    "Master": "15.8"
+  },
+  "Event-95": {
+    "Master": "15.7"
+  },
+  "Event-97": {
+    "Master": "15.3"
+  },
+  "Event-98": {
+    "Master": "15.8"
+  },
+  "Event-101": {
     "Master": "15.7"
   },
   "Inf-3": {
@@ -256,7 +362,7 @@
     "Master": "15.5"
   },
   "Inf-74": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "Inf-78": {
     "Master": "15.5"
@@ -286,10 +392,10 @@
     "Master": "15.3"
   },
   "Inf-123": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "Inf-126": {
-    "Master": "15.7~15.8"
+    "Master": "15.7-15.8"
   },
   "Inf-129": {
     "Master": "15.2"
@@ -346,7 +452,7 @@
     "Master": "15.9"
   },
   "Inf-200": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.1"
   },
   "Inf-208": {
@@ -373,6 +479,18 @@
   "Inf-240": {
     "Master": "15.3"
   },
+  "Inf-245": {
+    "Master": "15.8"
+  },
+  "Inf-251": {
+    "Master": "15.5"
+  },
+  "Inf-260": {
+    "Master": "15.3"
+  },
+  "Inf-257": {
+    "Master": "15.6"
+  },
   "Inf-263": {
     "Master": "15.3"
   },
@@ -386,7 +504,7 @@
     "Master": "15.2"
   },
   "Inf-282": {
-    "Master": "15.0"
+    "Master": "15"
   },
   "Inf-287": {
     "Master": "15.3"
@@ -401,7 +519,7 @@
     "Master": "15.8"
   },
   "Inf-300": {
-    "Master": "16.0",
+    "Master": "16",
     "Ultra": "15.4"
   },
   "Inf-305": {
@@ -419,84 +537,11 @@
   "Inf-321": {
     "Master": "15.2"
   },
-  "X-4": {
-    "Master": "15.0"
-  },
-  "X-5": {
-    "Master": "15.7"
-  },
-  "Y-3": {
-    "Master": "15.1"
-  },
-  "Y-4": {
-    "Master": "15.4"
-  },
-  "Y-5": {
-    "Master": "15.7~15.8"
-  },
-  "Event-49": {
-    "Master": "15.4"
-  },
-  "Event-52": {
-    "Master": "15.8~15.9"
-  },
-  "Event-53": {
-    "Master": "15.7"
-  },
-  "Event-55": {
-    "Master": "15.7"
-  },
-  "Event-58": {
-    "Master": "15.8"
-  },
-  "Event-61": {
-    "Master": "15.95"
-  },
-  "Event-64": {
-    "Master": "15.2"
-  },
-  "Event-66": {
-    "Master": "15.3"
-  },
-  "Event-68": {
-    "Master": "15.6"
-  },
-  "Event-71": {
-    "Master": "15.7"
-  },
-  "Event-74": {
-    "Master": "15.6"
-  },
-  "Event-76": {
-    "Master": "15.3"
-  },
-  "Event-77": {
-    "Master": "15.3"
-  },
-  "Event-79": {
-    "Master": "15.7"
-  },
-  "W-4": {
-    "Master": "15.1"
-  },
-  "W-5": {
-    "Master": "15.7"
-  },
   "Inf-329": {
     "Master": "15.2"
   },
-  "Event-82": {
-    "Master": "15.3"
-  },
   "Inf-333": {
     "Master": "15.4"
-  },
-  "Event-83": {
-    "Master": "15.5"
-  },
-  "Event-85": {
-    "Master": "16",
-    "Ultra": "15.2"
   },
   "Inf-337": {
     "Master": "15.3"
@@ -504,28 +549,10 @@
   "Inf-341": {
     "Master": "15.7"
   },
-  "Event-89": {
-    "Master": "15.7"
-  },
   "Inf-347": {
     "Master": "15.1"
   },
-  "Event-90": {
-    "Master": "15.2"
-  },
-  "Event-92": {
-    "Master": "15.8"
-  },
   "Inf-350": {
-    "Master": "15.9"
-  },
-  "Event-95": {
-    "Master": "15.7"
-  },
-  "Z-2": {
-    "Master": "15.1"
-  },
-  "Z-5": {
     "Master": "15.9"
   },
   "Inf-357": {
@@ -534,17 +561,8 @@
   "Inf-359": {
     "Master": "15.1"
   },
-  "Event-97": {
-    "Master": "15.3"
-  },
-  "Event-98": {
-    "Master": "15.8"
-  },
   "Inf-366": {
     "Master": "15.6"
-  },
-  "Event-101": {
-    "Master": "15.7"
   },
   "Inf-368": {
     "Master": "15.2"
