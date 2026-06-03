@@ -4,6 +4,7 @@ import json
 import re
 import time
 import os
+import socket
 from bs4 import BeautifulSoup
 from pathlib import Path
 from urllib.parse import unquote, quote
@@ -33,6 +34,119 @@ FANDOM_COOKIES_PATH = Path("Data") / "fandom_cookies.json"
 
 _CHROMEDRIVER_PATH = None
 _EDGEDRIVER_PATH = None
+
+_PROXY_DISABLED_VALUES = {"0", "false", "no", "n", "off", "disable", "disabled", "none", "direct"}
+_AUTO_PROXY_CANDIDATES = (
+    ("http", 7897),   # Clash Verge mixed/http
+    ("http", 7890),   # Clash mixed/http
+    ("http", 7891),   # Clash fallback
+    ("http", 10809),  # v2rayN HTTP
+    ("socks5", 10808),  # v2rayN SOCKS
+    ("http", 1080),
+)
+_LANOTA_PROXY_URL = None
+_LANOTA_PROXY_CHECKED = False
+
+
+def _is_local_port_open(host: str, port: int, timeout: float = 0.3) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def _normalize_proxy_url(value: str) -> Optional[str]:
+    value = (value or "").strip().strip('"').strip("'")
+    if not value:
+        return None
+    if value.lower() in _PROXY_DISABLED_VALUES:
+        return None
+    if re.fullmatch(r"\d{2,5}", value):
+        scheme = "socks5" if value == "10808" else "http"
+        return f"{scheme}://127.0.0.1:{value}"
+    if "://" not in value:
+        return f"http://{value}"
+    return value
+
+
+def _is_socks_proxy(proxy_url: Optional[str]) -> bool:
+    return bool(proxy_url and proxy_url.lower().startswith(("socks://", "socks4://", "socks5://", "socks5h://")))
+
+
+def _requests_supports_socks() -> bool:
+    try:
+        import socks  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def _proxy_supported_by_requests(proxy_url: Optional[str]) -> bool:
+    if not _is_socks_proxy(proxy_url):
+        return True
+    if _requests_supports_socks():
+        return True
+    print("检测到 SOCKS 代理，但当前 Python requests 未安装 PySocks；请优先使用 v2rayN HTTP 端口 10809。")
+    return False
+
+
+def _get_lanota_proxy_url() -> Optional[str]:
+    """Return the script-level proxy URL for Fandom requests.
+
+    LANOTA_PROXY accepts:
+      - auto / empty: probe common Clash/v2rayN ports on 127.0.0.1
+      - 7897 / 10809: use http://127.0.0.1:{port}
+      - 10808: use socks5://127.0.0.1:10808 if PySocks is installed
+      - 127.0.0.1:7897 or http://127.0.0.1:7897
+      - off / direct / 0: disable script proxy
+
+    LANOTA_PROXY_PORT can be used when LANOTA_PROXY is unset.
+    """
+    global _LANOTA_PROXY_URL, _LANOTA_PROXY_CHECKED
+    if _LANOTA_PROXY_CHECKED:
+        return _LANOTA_PROXY_URL
+
+    _LANOTA_PROXY_CHECKED = True
+    proxy_value = os.environ.get("LANOTA_PROXY")
+    proxy_port = os.environ.get("LANOTA_PROXY_PORT")
+
+    if proxy_value is not None and proxy_value.strip().lower() not in ("", "auto"):
+        _LANOTA_PROXY_URL = _normalize_proxy_url(proxy_value)
+        if not _proxy_supported_by_requests(_LANOTA_PROXY_URL):
+            _LANOTA_PROXY_URL = None
+        return _LANOTA_PROXY_URL
+
+    if proxy_port:
+        _LANOTA_PROXY_URL = _normalize_proxy_url(proxy_port)
+        if not _proxy_supported_by_requests(_LANOTA_PROXY_URL):
+            _LANOTA_PROXY_URL = None
+        return _LANOTA_PROXY_URL
+
+    socks_supported = _requests_supports_socks()
+    for scheme, port in _AUTO_PROXY_CANDIDATES:
+        if scheme.startswith("socks") and not socks_supported:
+            continue
+        if _is_local_port_open("127.0.0.1", port):
+            _LANOTA_PROXY_URL = f"{scheme}://127.0.0.1:{port}"
+            return _LANOTA_PROXY_URL
+
+    return None
+
+
+def _apply_lanota_proxy(session: requests.Session) -> Optional[str]:
+    proxy_url = _get_lanota_proxy_url()
+    if not proxy_url:
+        print("LANOTA_PROXY 未启用或未探测到本地 Clash 端口，将直连 Fandom。")
+        return None
+
+    session.trust_env = False
+    session.proxies.update({
+        "http": proxy_url,
+        "https": proxy_url,
+    })
+    print(f"Fandom requests 将通过脚本代理访问: {proxy_url}")
+    return proxy_url
 
 
 def _detect_chrome_binary() -> Optional[str]:
@@ -281,6 +395,9 @@ def get_page_with_selenium(url, wait_time=30, *, headless=None, save_cookies=Tru
 
     profile_dir = Path("Data") / "selenium_profile"
     profile_dir.mkdir(parents=True, exist_ok=True)
+    proxy_url = _get_lanota_proxy_url()
+    if proxy_url:
+        print(f"Selenium 浏览器将通过脚本代理访问: {proxy_url}")
 
     last_exc = None
     for run_headless in headless_candidates:
@@ -301,6 +418,8 @@ def get_page_with_selenium(url, wait_time=30, *, headless=None, save_cookies=Tru
                 edge_options.add_argument("--disable-blink-features=AutomationControlled")
                 edge_options.add_argument(f"user-agent={ua}")
                 edge_options.add_argument(f"--user-data-dir={profile_dir.resolve()}")
+                if proxy_url:
+                    edge_options.add_argument(f"--proxy-server={proxy_url}")
                 edge_options.add_experimental_option("excludeSwitches", ["enable-automation"])
                 edge_options.add_experimental_option("useAutomationExtension", False)
 
@@ -343,6 +462,8 @@ def get_page_with_selenium(url, wait_time=30, *, headless=None, save_cookies=Tru
                 chrome_options.add_argument("--disable-blink-features=AutomationControlled")
                 chrome_options.add_argument(f"user-agent={ua}")
                 chrome_options.add_argument(f"--user-data-dir={profile_dir.resolve()}")
+                if proxy_url:
+                    chrome_options.add_argument(f"--proxy-server={proxy_url}")
                 chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
                 chrome_options.add_experimental_option("useAutomationExtension", False)
 
@@ -841,6 +962,7 @@ def main():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
     })
+    _apply_lanota_proxy(session)
     if _load_cookies_to_session(session):
         print(f"已加载 Fandom cookies: {FANDOM_COOKIES_PATH}")
 
