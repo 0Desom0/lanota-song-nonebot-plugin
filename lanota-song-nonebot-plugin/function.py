@@ -7,6 +7,7 @@ import datetime
 import json
 import threading
 import json
+import re
 
 # 创建同步锁
 lock = threading.Lock()
@@ -155,6 +156,26 @@ def load_table_data():
         print(f"加载定数表数据失败: {str(e)}")
         return {}
 
+def format_table_constant(value):
+    if value is None:
+        return ""
+
+    text = str(value).strip()
+    if not text:
+        return ""
+
+    range_match = re.match(r"^(\d+(?:\.\d+)?)(\s*[~-]\s*)(\d+(?:\.\d+)?)$", text)
+    if range_match:
+        left, sep, right = range_match.groups()
+        return f"{format_table_constant(left)}{sep}{format_table_constant(right)}"
+
+    try:
+        number = float(text)
+    except ValueError:
+        return text
+
+    return f"{number:.1f}"
+
 def format_song_info(song):
     """处理乐曲格式"""
     # 处理数据的辅助函数
@@ -201,7 +222,7 @@ def format_song_info(song):
         notes_str = f"物量: {get_value(notes_value)}"
         
         if table_diff:
-            return f"{diff_str}({table_diff}) ({notes_str})"
+            return f"{diff_str}({format_table_constant(table_diff)}) ({notes_str})"
         return f"{diff_str} ({notes_str})"
     
     # 旧谱难度格式化函数

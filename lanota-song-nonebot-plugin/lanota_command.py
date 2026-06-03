@@ -1250,7 +1250,7 @@ async def handle_table(bot: Bot, event: MessageEvent):
             if set_huanhang:
                 message += "\n"
                 set_huanhang = False
-            message += f"定数 {exact_level}：\n"
+            message += f"定数 {format_table_constant(exact_level)}：\n"
             current_exact_level = exact_level
         
         # 获取歌曲信息表里的难度 (大定数)
