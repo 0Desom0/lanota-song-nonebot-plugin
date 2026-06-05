@@ -31,6 +31,11 @@ API_URL = f"{BASE_URL}/api.php"
 
 FANDOM_COOKIES_PATH = Path("Data") / "fandom_cookies.json"
 
+# 默认纯 Fandom/MediaWiki API，不碰网页渲染和 Selenium。
+# 需要临时恢复旧兜底时，直接把这里改成 True。
+ENABLE_WEB_FALLBACK = False
+ENABLE_SELENIUM_FALLBACK = False
+
 _CHROMEDRIVER_PATH = None
 _EDGEDRIVER_PATH = None
 
@@ -454,12 +459,16 @@ def get_page_with_selenium(url, wait_time=30, *, headless=None, save_cookies=Tru
     raise last_exc
 
 
-def fetch_wikitext(session: requests.Session, page_name: str) -> str:
-    """获取页面 wikitext：API(query revisions) -> API(parse) -> action=raw -> action=edit -> Selenium 兜底。"""
+def fetch_wikitext(session: requests.Session, page_name: str, *, allow_selenium=None, allow_web_fallback=None) -> str:
+    """获取页面 wikitext：API(query revisions) -> API(parse)。
+
+    Web and Selenium fallbacks are controlled by ENABLE_WEB_FALLBACK and
+    ENABLE_SELENIUM_FALLBACK at the top of this file.
+    """
     debug = True
 
     # 清理 page_name（避免带上 ?/# 造成 API 查不到）
-    page_name = (page_name or "").split("#", 1)[0].split("?", 1)[0].strip()
+    page_name = (page_name or "").split("#", 1)[0].strip()
     if not page_name:
         return ""
 
@@ -531,38 +540,44 @@ def fetch_wikitext(session: requests.Session, page_name: str) -> str:
     except requests.exceptions.RequestException:
         pass
 
-    # 3) action=raw
     raw_url = f"{BASE_URL}/wiki/{page_name_path}?action=raw"
-    try:
-        r = session.get(raw_url, timeout=15)
-        txt = _sanitize_wikitext(r.text or "")
-        if r.status_code == 200 and txt:
-            if debug:
-                print(f"  [wikitext] raw OK: {page_name}")
-            return txt
-    except requests.exceptions.RequestException:
-        pass
-
-    # 4) action=edit：从 textarea 里抠源码（页面本身是 HTML，但源码在 textarea 中）
     edit_url = f"{BASE_URL}/wiki/{page_name_path}?action=edit"
-    try:
-        r = session.get(edit_url, timeout=15)
-        if r.status_code == 200 and r.text and not _is_client_challenge(r.text):
-            soup = BeautifulSoup(r.text, "html.parser")
-            ta = soup.find("textarea", {"name": "wpTextbox1"}) or soup.find("textarea", {"id": "wpTextbox1"})
-            if ta is not None:
-                content = _sanitize_wikitext(ta.get_text("", strip=False) or "")
-                if content:
-                    if debug:
-                        print(f"  [wikitext] edit OK: {page_name}")
-                    return content
-    except requests.exceptions.RequestException:
-        pass
+
+    use_web_fallback = allow_web_fallback
+    if use_web_fallback is None:
+        use_web_fallback = ENABLE_WEB_FALLBACK
+
+    if use_web_fallback:
+        # 3) action=raw
+        try:
+            r = session.get(raw_url, timeout=15)
+            txt = _sanitize_wikitext(r.text or "")
+            if r.status_code == 200 and txt:
+                if debug:
+                    print(f"  [wikitext] raw OK: {page_name}")
+                return txt
+        except requests.exceptions.RequestException:
+            pass
+
+        # 4) action=edit：从 textarea 里抠源码（页面本身是 HTML，但源码在 textarea 中）
+        try:
+            r = session.get(edit_url, timeout=15)
+            if r.status_code == 200 and r.text and not _is_client_challenge(r.text):
+                soup = BeautifulSoup(r.text, "html.parser")
+                ta = soup.find("textarea", {"name": "wpTextbox1"}) or soup.find("textarea", {"id": "wpTextbox1"})
+                if ta is not None:
+                    content = _sanitize_wikitext(ta.get_text("", strip=False) or "")
+                    if content:
+                        if debug:
+                            print(f"  [wikitext] edit OK: {page_name}")
+                        return content
+        except requests.exceptions.RequestException:
+            pass
 
     # 5) Selenium 兜底（通常需要先用交互模式通过挑战）
-    use_selenium = _env_flag("LANOTA_WIKITEXT_USE_SELENIUM")
+    use_selenium = allow_selenium
     if use_selenium is None:
-        use_selenium = True  # 默认启用 Selenium 兜底
+        use_selenium = ENABLE_SELENIUM_FALLBACK
     if SELENIUM_AVAILABLE and use_selenium:
         if debug:
             print(f"  [wikitext] selenium fallback: {page_name}")
@@ -633,6 +648,173 @@ def get_final_url(session, url, max_retries=3):
             time.sleep(1)
     return url
 
+def _wiki_title_to_url(title: str) -> str:
+    title_path = quote((title or "").replace(" ", "_"), safe=":()'!-._~")
+    return f"{BASE_URL}/wiki/{title_path}"
+
+def _wiki_url_to_page_name(url: str) -> str:
+    raw_page = (url or "").rsplit('/wiki/', 1)[-1]
+    return unquote(raw_page.split("#", 1)[0].split("?", 1)[0])
+
+def _is_song_list_link(title: str) -> bool:
+    if not title:
+        return False
+    normalized = title.strip().replace(" ", "_")
+    lowered = normalized.lower()
+    if lowered == "songs" or lowered.startswith("songs#"):
+        return False
+    namespace = lowered.split(":", 1)[0]
+    if namespace in {
+        "file", "category", "template", "help", "special", "user",
+        "user_talk", "talk", "portal",
+    }:
+        return False
+    return True
+
+def extract_song_links_from_wikitext(wikitext: str) -> list[dict]:
+    songs_info = []
+    if not wikitext:
+        return songs_info
+
+    rows = re.split(r"\n\|-\s*\n?", wikitext)
+    seen = set()
+    for row in rows:
+        row_text = row.strip()
+        if not row_text.startswith("|") or row_text.startswith("|}"):
+            continue
+
+        first_link = None
+        wikicode = mwparserfromhell.parse(row_text)
+        for link in wikicode.filter_wikilinks(recursive=True):
+            title = str(link.title).strip()
+            if _is_song_list_link(title):
+                first_link = link
+                break
+
+        if first_link is None:
+            continue
+
+        page_title = str(first_link.title).strip()
+        display_title = str(first_link.text or first_link.title).strip()
+        display_title = re.sub(r"'{2,}", "", clean_wiki_links(display_title)).strip()
+        if not display_title:
+            display_title = page_title.replace("_", " ")
+
+        key = (page_title.lower(), display_title.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        songs_info.append({
+            "href": _wiki_title_to_url(page_title),
+            "display_title": display_title,
+        })
+
+    return songs_info
+
+def fetch_song_list_from_api(session: requests.Session) -> list[dict]:
+    print("使用 Fandom/MediaWiki API 获取 Songs 页面源码...")
+    wikitext = fetch_wikitext(session, "Songs", allow_selenium=False)
+    if not wikitext:
+        raise Exception("无法通过 Fandom/MediaWiki API 获取 Songs 页面源码")
+
+    songs_info = extract_song_links_from_wikitext(wikitext)
+    if not songs_info:
+        raise Exception("已获取 Songs 页面源码，但未能从 wikitable 中解析出歌曲链接")
+    return songs_info
+
+def extract_song_links_from_html(page_html: str) -> list[dict]:
+    soup = BeautifulSoup(page_html, 'html.parser')
+
+    wikitable = soup.find('table', {'class': 'wikitable'})
+    if wikitable is None:
+        wikitable = soup.find('table', {'class': 'sortable'})
+    if wikitable is None:
+        wikitable = soup.find('table', class_=lambda x: x and 'wikitable' in x)
+    if wikitable is None:
+        wikitable = soup.find('table', {'class': 'article-table'})
+    if wikitable is None:
+        wikitable = soup.find('table', class_=lambda x: x and 'table' in x.lower())
+    if wikitable is None:
+        for table in soup.find_all('table'):
+            if table.find(string=re.compile(r'Dream goes on', re.IGNORECASE)):
+                wikitable = table
+                break
+
+    if wikitable is None:
+        all_tables = soup.find_all('table')
+        table_classes = [str(t.get('class', [])) for t in all_tables]
+        raise Exception(f"无法找到乐曲列表表格。页面中找到 {len(all_tables)} 个表格，class: {table_classes[:5]}")
+
+    songs_info = []
+    wiki_link_re = re.compile(r"^(?:/wiki/|https?://lanota\.fandom\.com/wiki/).+")
+    ns_block = re.compile(
+        r"^(?:/wiki/|https?://lanota\.fandom\.com/wiki/)(File:|Category:|Template:|Help:|Special:|User:|User_talk:|Talk:|Portal:)")
+    for row in wikitable.find_all('tr'):
+        first_td = row.find('td')
+        link = None
+        if first_td:
+            link = first_td.find('a', href=wiki_link_re)
+        if not link:
+            link = row.find('a', href=wiki_link_re)
+        if not link or not link.get('href'):
+            continue
+        href = link['href']
+        if ns_block.match(href):
+            continue
+        if href.startswith('/wiki/Songs') or '/wiki/Songs' in href:
+            continue
+        abs_href = f"{BASE_URL}{href}" if href.startswith('/wiki/') else href
+        display_title = (link.get('title') or link.get_text(strip=True) or '').strip()
+        if not display_title:
+            continue
+        songs_info.append({'href': abs_href, 'display_title': display_title})
+
+    seen = set()
+    songs_info_dedup = []
+    for it in songs_info:
+        key = (it['href'], it['display_title'].lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        songs_info_dedup.append(it)
+    return songs_info_dedup
+
+def fetch_song_list_from_web_fallback(session: requests.Session) -> list[dict]:
+    if ENABLE_SELENIUM_FALLBACK and SELENIUM_AVAILABLE:
+        print("API 获取 Songs 列表失败，使用 Selenium 兜底...")
+        page_html = get_page_with_selenium(
+            f"{BASE_URL}/wiki/Songs?action=render",
+            debug_name="songs",
+            session=session,
+        )
+        if _is_client_challenge(page_html) or "<table" not in page_html.lower():
+            page_html = get_page_with_selenium(
+                f"{BASE_URL}/wiki/Songs",
+                debug_name="songs",
+                session=session,
+            )
+        _load_cookies_to_session(session)
+        return extract_song_links_from_html(page_html)
+
+    if ENABLE_WEB_FALLBACK:
+        print("API 获取 Songs 列表失败，使用普通网页请求兜底...")
+        resp = session.get(f"{BASE_URL}/wiki/Songs?action=render", timeout=30)
+        resp.raise_for_status()
+        if _is_client_challenge(resp.text):
+            resp = session.get(f"{BASE_URL}/wiki/Songs", timeout=30)
+            resp.raise_for_status()
+        return extract_song_links_from_html(resp.text)
+
+    raise Exception("API 获取 Songs 列表失败，且 ENABLE_WEB_FALLBACK/ENABLE_SELENIUM_FALLBACK 均未开启")
+
+def fetch_song_list(session: requests.Session) -> list[dict]:
+    try:
+        return fetch_song_list_from_api(session)
+    except Exception:
+        if not (ENABLE_WEB_FALLBACK or ENABLE_SELENIUM_FALLBACK):
+            raise
+        return fetch_song_list_from_web_fallback(session)
+
 def check_missing_fields(song):
     """检查歌曲的缺失字段，返回缺失字段列表"""
     missing = []
@@ -674,9 +856,7 @@ def update_song_from_wiki(session, song):
         return None, []
     
     try:
-        final_url = get_final_url(session, song['source_url'])
-        raw_page = final_url.rsplit('/wiki/', 1)[-1]
-        page_name = unquote(raw_page)
+        page_name = _wiki_url_to_page_name(song['source_url'])
 
         wikitext = fetch_wikitext(session, page_name)
         if not wikitext:
@@ -875,7 +1055,7 @@ def main():
             print(f"  - {item['song']['title']} (章节: {item['chapter']})")
             print(f"    缺失: {', '.join(item['missing'])}")
     else:
-        print("\n✓ 所有现有歌曲信息完整")
+        print("\n[OK] 所有现有歌曲信息完整")
 
     # 构建去重集合：真实标题和外部标题
     existing_titles = {item['title'].lower() for item in data}
@@ -884,103 +1064,10 @@ def main():
 
     print("\n正在搜索乐曲列表……")
     
-    # 尝试使用 Selenium 获取页面(因为 Fandom 现在可能需要 JavaScript)
     try:
-        if SELENIUM_AVAILABLE:
-            # 先用 action=render，通常更轻量、也更容易出现表格
-            page_html = get_page_with_selenium(
-                f"{BASE_URL}/wiki/Songs?action=render",
-                debug_name="songs",
-                session=session,
-            )
-            if _is_client_challenge(page_html) or "<table" not in page_html.lower():
-                page_html = get_page_with_selenium(
-                    f"{BASE_URL}/wiki/Songs",
-                    debug_name="songs",
-                    session=session,
-                )
-            # selenium 可能刚写入 cookies（同一轮运行也要立刻加载到 session）
-            _load_cookies_to_session(session)
-            soup = BeautifulSoup(page_html, 'html.parser')
-        else:
-            # 回退到普通请求(可能会失败)
-            print("警告: 未安装 selenium,尝试使用普通请求(可能失败)...")
-            resp = session.get(f"{BASE_URL}/wiki/Songs?action=render", timeout=30)
-            resp.raise_for_status()
-            if _is_client_challenge(resp.text):
-                resp = session.get(f"{BASE_URL}/wiki/Songs", timeout=30)
-                resp.raise_for_status()
-            soup = BeautifulSoup(resp.text, 'html.parser')
+        songs_info = fetch_song_list(session)
     except Exception as e:
-        raise Exception(f"无法访问 Fandom Wiki: {e}")
-    
-    # 检查是否找到了乐曲表格（尝试多种方式查找）
-    wikitable = soup.find('table', {'class': 'wikitable'})
-    
-    # 如果找不到 wikitable class，尝试查找包含 sortable 的表格
-    if wikitable is None:
-        wikitable = soup.find('table', {'class': 'sortable'})
-    
-    # 尝试查找 class 包含 wikitable 的表格（部分匹配）
-    if wikitable is None:
-        wikitable = soup.find('table', class_=lambda x: x and 'wikitable' in x)
-    
-    # 尝试查找 article-table
-    if wikitable is None:
-        wikitable = soup.find('table', {'class': 'article-table'})
-    
-    # 尝试查找任何 class 包含 table 的表格
-    if wikitable is None:
-        wikitable = soup.find('table', class_=lambda x: x and 'table' in x.lower())
-    
-    # 最后尝试：查找页面中第一个包含 "Dream goes on" 的表格（第一首歌）
-    if wikitable is None:
-        for table in soup.find_all('table'):
-            if table.find(string=re.compile(r'Dream goes on', re.IGNORECASE)):
-                wikitable = table
-                break
-    
-    if wikitable is None:
-        # 调试信息：打印页面中找到的所有表格的 class
-        all_tables = soup.find_all('table')
-        table_classes = [str(t.get('class', [])) for t in all_tables]
-        raise Exception(f"无法找到乐曲列表表格。页面中找到 {len(all_tables)} 个表格，class: {table_classes[:5]}")
-
-    # 收集页面上的所有乐曲链接及初步标题
-    songs_info = []
-    wiki_link_re = re.compile(r"^(?:/wiki/|https?://lanota\.fandom\.com/wiki/).+")
-    ns_block = re.compile(
-        r"^(?:/wiki/|https?://lanota\.fandom\.com/wiki/)(File:|Category:|Template:|Help:|Special:|User:|User_talk:|Talk:|Portal:)")
-    for row in wikitable.find_all('tr'):
-        first_td = row.find('td')
-        link = None
-        if first_td:
-            link = first_td.find('a', href=wiki_link_re)
-        if not link:
-            link = row.find('a', href=wiki_link_re)
-        if not link or not link.get('href'):
-            continue
-        href = link['href']
-        if ns_block.match(href):
-            continue
-        if href.startswith('/wiki/Songs') or '/wiki/Songs' in href:
-            continue
-        abs_href = f"{BASE_URL}{href}" if href.startswith('/wiki/') else href
-        display_title = (link.get('title') or link.get_text(strip=True) or '').strip()
-        if not display_title:
-            continue
-        songs_info.append({'href': abs_href, 'display_title': display_title})
-
-    # 去重（保持顺序）
-    seen = set()
-    songs_info_dedup = []
-    for it in songs_info:
-        key = (it['href'], it['display_title'].lower())
-        if key in seen:
-            continue
-        seen.add(key)
-        songs_info_dedup.append(it)
-    songs_info = songs_info_dedup
+        raise Exception(f"无法通过 Fandom/MediaWiki API 获取乐曲列表: {e}")
 
     print(f"共找到 {len(songs_info)} 首乐曲")
 
@@ -1040,7 +1127,7 @@ def main():
                     'updated': updated_fields,
                     'success': True
                 })
-                print(f"  ✓ 成功更新: {', '.join(updated_fields)}")
+                print(f"  [OK] 成功更新: {', '.join(updated_fields)}")
             else:
                 update_results.append({
                     'title': song['title'],
@@ -1049,7 +1136,7 @@ def main():
                     'updated': [],
                     'success': False
                 })
-                print(f"  ✗ 更新失败或无新数据")
+                print(f"  [FAIL] 更新失败或无新数据")
             
             time.sleep(0.5)
     
@@ -1060,9 +1147,8 @@ def main():
         print("-" * 60)
 
     for info in candidates:
-        final_url = get_final_url(session, info['href'])
-        raw_page = final_url.rsplit('/wiki/', 1)[-1]
-        page_name = unquote(raw_page)
+        final_url = info['href']
+        page_name = _wiki_url_to_page_name(final_url)
 
         wikitext = fetch_wikitext(session, page_name)
         if not wikitext:
@@ -1187,7 +1273,7 @@ def main():
         if update_results:
             print(f"\n  详细结果:")
             for result in update_results:
-                status = "✓ 成功" if result['success'] else "✗ 失败"
+                status = "[OK] 成功" if result['success'] else "[FAIL] 失败"
                 print(f"    {status} | {result['title']} (章节: {result['chapter']})")
                 print(f"      原缺失: {', '.join(result['missing'])}")
                 if result['updated']:
@@ -1197,7 +1283,7 @@ def main():
     else:
         success_count = 0
         print(f"\n【缺失信息更新】")
-        print(f"  ✓ 所有歌曲信息完整")
+        print(f"  [OK] 所有歌曲信息完整")
     
     # 新增歌曲报告
     print(f"\n【新增乐曲】")

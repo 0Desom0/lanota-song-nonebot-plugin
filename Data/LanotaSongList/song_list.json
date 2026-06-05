@@ -4368,7 +4368,7 @@
     "area": "City",
     "genre": "Piano Ballad",
     "vocals": "Naoto Fuuga",
-    "chart_design": "No Info",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "atsushi",
     "notes": {
       "whisper": "208",
@@ -4658,7 +4658,7 @@
     "area": "Mysterious Woods",
     "genre": "Artcore",
     "vocals": "No",
-    "chart_design": "No Info",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "atsushi",
     "notes": {
       "whisper": "302",
@@ -5680,7 +5680,7 @@
     "area": "",
     "genre": "Hardstyle",
     "vocals": "Samples",
-    "chart_design": "",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "笔记RE",
     "notes": {
       "whisper": "210",
@@ -10102,7 +10102,7 @@
     "area": "Ritmo's Library",
     "genre": "Trance/Complextro",
     "vocals": "Samples",
-    "chart_design": "",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "HakureiNeko",
     "notes": {
       "whisper": "382",
@@ -12443,7 +12443,7 @@
     "area": "Ritmo's Library",
     "genre": "World/Hardcore",
     "vocals": "None",
-    "chart_design": "",
+    "chart_design": "明日",
     "cover_art": "SCAF",
     "notes": {
       "whisper": "362",
@@ -13751,7 +13751,7 @@
     "area": "Ritmo's Library",
     "genre": "Piano Dance",
     "vocals": "None",
-    "chart_design": "",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "RE:design / reo",
     "notes": {
       "whisper": "402",
@@ -15056,7 +15056,7 @@
     "area": "Ritmo's Library",
     "genre": "Hardcore",
     "vocals": "None",
-    "chart_design": "",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "榊原またぎ＋LESYEF",
     "notes": {
       "whisper": "541",
@@ -20491,7 +20491,7 @@
     "bpm": "110",
     "version": "3.1.0 - November 26, 2024",
     "area": "Central Station",
-    "genre": "",
+    "genre": "Pop",
     "vocals": "punipunidenki",
     "chart_design": "TearsD",
     "cover_art": "",
@@ -20502,7 +20502,12 @@
       "master": "1115"
     },
     "source_url": "https://lanota.fandom.com/wiki/AMEMOYOU",
-    "Legacy": {}
+    "Legacy": {},
+    "Trivia": [
+      "This song's title in Japanese is \"雨模様\".",
+      "This song also appears in Paradigm: Reboot as part of its collaboration with DEEMO II.",
+      "[https://wikiwiki.jp/lanotagame/AMEMOYOU Japanese wiki]"
+    ]
   },
   {
     "id": 647,
@@ -20581,18 +20586,22 @@
     "bpm": "220",
     "version": "3.1.0 - November 26, 2024",
     "area": "Central Station",
-    "genre": "",
+    "genre": "Artcore",
     "vocals": "None",
     "chart_design": "明日",
     "cover_art": "",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "748",
+      "acoustic": "1121",
+      "ultra": "1530",
       "master": "2050"
     },
     "source_url": "https://lanota.fandom.com/wiki/Antikythera",
-    "Legacy": {}
+    "Legacy": {},
+    "Trivia": [
+      "This song also appears in Rotaeno, Rizline and Paradigm: Reboot as part of their collaborations with DEEMO II.",
+      "[https://wikiwiki.jp/lanotagame/Antikythera Japanese wiki]"
+    ]
   },
   {
     "id": 650,
@@ -20622,7 +20631,11 @@
       "master": "1089"
     },
     "source_url": "https://lanota.fandom.com/wiki/Reverie",
-    "Legacy": {}
+    "Legacy": {},
+    "Trivia": [
+      "This is the first song in an Expansion Chapter to have a Whisper 1 chart.",
+      "[https://wikiwiki.jp/lanotagame/Reverie Japanese wiki]"
+    ]
   },
   {
     "id": 651,
@@ -21422,9 +21435,9 @@
     "chart_design": "",
     "cover_art": "織部よよ",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "345",
+      "acoustic": "520",
+      "ultra": "995",
       "master": "1233"
     },
     "source_url": "https://lanota.fandom.com/wiki/Renaissance_~infante_d%C3%A9funte",
@@ -21457,9 +21470,9 @@
     "chart_design": "TearsD",
     "cover_art": "NingQ",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "392",
+      "acoustic": "596",
+      "ultra": "892",
       "master": "1120"
     },
     "source_url": "https://lanota.fandom.com/wiki/Castitas",
@@ -21491,9 +21504,9 @@
     "chart_design": "小夜",
     "cover_art": "はちどり",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "619",
+      "acoustic": "905",
+      "ultra": "1504",
       "master": "1663"
     },
     "source_url": "https://lanota.fandom.com/wiki/The_Highway_No.105_XXX",
@@ -21531,9 +21544,9 @@
     "chart_design": "",
     "cover_art": "Riya",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "504",
+      "acoustic": "658",
+      "ultra": "953",
       "master": "1098"
     },
     "source_url": "https://lanota.fandom.com/wiki/Reina",
@@ -21566,16 +21579,16 @@
     "chart_design": "",
     "cover_art": "LanuBis",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "478",
+      "acoustic": "679",
+      "ultra": "1141",
       "master": "1397"
     },
     "source_url": "https://lanota.fandom.com/wiki/Tokamak",
     "Trivia": [
       "A '''Tokamak''' is a machine that uses magnets to confine plasma into a torus shape, used in the development of nuclear fusion.",
       "The full version of this track can be found on milkyway TRAXX's album \"Fusion Core\" ([https://milkywaytraxx.com/release/mkwy-0016/ Link]).",
-      "This song is also featured in OverRapid,",
+      "This song is also featured in OverRapid and ELLIA.",
       "[https://wikiwiki.jp/lanotagame/Tokamak Japanese wiki]"
     ],
     "Legacy": {}
@@ -21599,12 +21612,12 @@
     "area": "Ritmo's Library",
     "genre": "Future Garage",
     "vocals": "None",
-    "chart_design": "",
+    "chart_design": "嵐飛xFly (アイ．フライ)",
     "cover_art": "mnemo & Acro",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "446",
+      "acoustic": "767",
+      "ultra": "930",
       "master": "1149"
     },
     "source_url": "https://lanota.fandom.com/wiki/Gush_forth_(Game_Edit)",
@@ -21742,9 +21755,9 @@
     "chart_design": "",
     "cover_art": "絕美(Allen)",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "603",
+      "acoustic": "843",
+      "ultra": "1076",
       "master": "1817"
     },
     "source_url": "https://lanota.fandom.com/wiki/Conclusion_of_%E2%88%80",
@@ -21778,15 +21791,15 @@
     "chart_design": "Tri∆ngle379",
     "cover_art": "キドリ",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "466",
+      "acoustic": "703",
+      "ultra": "946",
       "master": "1169"
     },
     "source_url": "https://lanota.fandom.com/wiki/CATACLYSM",
     "Trivia": [
       "According to its YouTube description, this song can be used in any rhythm game free of charge.",
-      "This song also appears in ChainBeeT, Shinobi Slash and Berry Melody.",
+      "This song also appears in ChainBeeT, Shinobi Slash, Rotaeno and Berry Melody.",
       "[https://wikiwiki.jp/lanotagame/CATACLYSM Japanese wiki]"
     ],
     "Legacy": {}
@@ -21813,15 +21826,641 @@
     "chart_design": "小夜",
     "cover_art": "Dashy",
     "notes": {
-      "whisper": "",
-      "acoustic": "",
-      "ultra": "",
+      "whisper": "411",
+      "acoustic": "740",
+      "ultra": "1466",
       "master": "1649"
     },
     "source_url": "https://lanota.fandom.com/wiki/Thank_You,_Mrs._Nory",
     "Trivia": [
       "This song is dedicated to another person, according to the composer.",
       "[https://wikiwiki.jp/lanotagame/Thank%20You%2C%20Mrs.%20Nory Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 685,
+    "title": "Rebirth",
+    "title_outside": "Rebirth",
+    "artist": "technoplanet ft. Haruki",
+    "chapter": "Event-102",
+    "category": "event",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "8",
+      "ultra": "12",
+      "master": "14+"
+    },
+    "time": "2:38",
+    "bpm": "206",
+    "version": "3.2.2 - February 26, 2026",
+    "area": "Tracklist Mode",
+    "genre": "",
+    "vocals": "Haruki",
+    "chart_design": "TearsD",
+    "cover_art": "ぴーす",
+    "notes": {
+      "whisper": "557",
+      "acoustic": "863",
+      "ultra": "1238",
+      "master": "1572"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Rebirth",
+    "Trivia": [
+      "The full version of this song is included on technoplanet's 4th EP, \"[https://technopla.net/4th-ep-陰キャのうた/ 陰キャのうた]\".",
+      "[https://wikiwiki.jp/lanotagame/Rebirth Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 686,
+    "title": "Seirensen",
+    "title_outside": "Seirensen",
+    "artist": "technoplanet ft. Haruki",
+    "chapter": "Event-103",
+    "category": "event",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "7",
+      "ultra": "10",
+      "master": "13+"
+    },
+    "time": "2:38",
+    "bpm": "140",
+    "version": "3.2.2 - February 26, 2026",
+    "area": "Tracklist Mode",
+    "genre": "",
+    "vocals": "Haruki",
+    "chart_design": "DarkM",
+    "cover_art": "ぴーす",
+    "notes": {
+      "whisper": "354",
+      "acoustic": "541",
+      "ultra": "884",
+      "master": "1229"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Seirensen",
+    "Trivia": [
+      "This song's title in Japanese is \"星恋線\".",
+      "The lyrics for this song were written by Aya Akagi.",
+      "[https://wikiwiki.jp/lanotagame/Seirensen Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 687,
+    "title": "Juvenile 2",
+    "title_outside": "Juvenile 2",
+    "artist": "technoplanet",
+    "chapter": "Event-104",
+    "category": "event",
+    "difficulty": {
+      "whisper": "5",
+      "acoustic": "10",
+      "ultra": "14",
+      "master": "15+"
+    },
+    "time": "2:30",
+    "bpm": "202",
+    "version": "3.2.2 - February 26, 2026",
+    "area": "Tracklist Mode",
+    "genre": "Axera",
+    "vocals": "None",
+    "chart_design": "AXERA",
+    "cover_art": "",
+    "notes": {
+      "whisper": "872",
+      "acoustic": "1145",
+      "ultra": "1431",
+      "master": "1677"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Juvenile_2",
+    "Trivia": [
+      "This song is a sequel to Juvenile.",
+      "[https://wikiwiki.jp/lanotagame/Juvenile%202 Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 688,
+    "title": "Game Over",
+    "title_outside": "Game Over",
+    "artist": "Paxiom",
+    "chapter": "Inf-369",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "2",
+      "acoustic": "7",
+      "ultra": "11",
+      "master": "13"
+    },
+    "time": "2:14",
+    "bpm": "120",
+    "version": "3.1.1 - March 5, 2026",
+    "area": "Ritmo's Library",
+    "genre": "House",
+    "vocals": "Samples",
+    "chart_design": "",
+    "cover_art": "焰焰子(Yanfiregreen)",
+    "notes": {
+      "whisper": "278",
+      "acoustic": "418",
+      "ultra": "633",
+      "master": "738"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Game_Over",
+    "Legacy": {}
+  },
+  {
+    "id": 689,
+    "title": "Collapsed Colony",
+    "title_outside": "Collapsed Colony",
+    "artist": "NegimaSaya",
+    "chapter": "Inf-370",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "6",
+      "ultra": "12",
+      "master": "13+"
+    },
+    "time": "2:39",
+    "bpm": "140",
+    "version": "3.1.1 - March 12, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Dubstep",
+    "vocals": "None",
+    "chart_design": "",
+    "cover_art": "Sa9chan",
+    "notes": {
+      "whisper": "283",
+      "acoustic": "502",
+      "ultra": "1043",
+      "master": "1566"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Collapsed_Colony",
+    "Trivia": [
+      "This song was an entry to Cosmic Radio 2025.",
+      "[https://wikiwiki.jp/lanotagame/Collapsed%20Colony Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 690,
+    "title": "Festival Forever",
+    "title_outside": "Festival Forever",
+    "artist": "TAKIO",
+    "chapter": "Inf-371",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "8",
+      "ultra": "13",
+      "master": "15"
+    },
+    "time": "2:21",
+    "bpm": "200",
+    "version": "3.2.2 - March 19, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Otoge Core",
+    "vocals": "None",
+    "chart_design": "",
+    "cover_art": "きっす",
+    "notes": {
+      "whisper": "481",
+      "acoustic": "708",
+      "ultra": "1035",
+      "master": "1603"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Festival_Forever",
+    "Trivia": [
+      "This song is also featured in 8ave.",
+      "[https://wikiwiki.jp/lanotagame/Festival%20Forever Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 691,
+    "title": "KN0Q",
+    "title_outside": "KN0Q",
+    "artist": "Koke × NegimaSaya",
+    "chapter": "Inf-373",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "3",
+      "acoustic": "7",
+      "ultra": "12",
+      "master": "14+"
+    },
+    "time": "2:13",
+    "bpm": "135",
+    "version": "3.2.3 - April 2, 2026",
+    "area": "Ritmo's Library",
+    "genre": "",
+    "vocals": "None",
+    "chart_design": "Adashi",
+    "cover_art": "しなしなしなもん",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1144"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/KN0Q",
+    "Trivia": [
+      "This song was an entry to Cosmic Radio 2025.",
+      "This song also appears in DEEMO II.",
+      "[https://wikiwiki.jp/lanotagame/KN0Q Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 692,
+    "title": "Happyfulencer!",
+    "title_outside": "Happyfulencer!",
+    "artist": "irucaice × Ichinose LUPO × Ponchi♪",
+    "chapter": "Inf-374",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "5",
+      "acoustic": "9",
+      "ultra": "13",
+      "master": "15"
+    },
+    "time": "2:39",
+    "bpm": "172",
+    "version": "3.2.3 - April 9, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Pop",
+    "vocals": "Hatsune Miku",
+    "chart_design": "Tri∆ngle379",
+    "cover_art": "おむたつ, あらめ, 駿川/Hayakawa & あげは",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1404"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Happyfulencer!",
+    "Trivia": [
+      "This song's title in Japanese is \"ハピフルエンサー！\".",
+      "Although not credited, Hatsune Miku provides the vocals for this song and is in this song's artwork.",
+      "The full version of song can be found on the album \"[https://karent.jp/album/4850 KIRAHAPI Collection vol.1]\".",
+      "This song is also featured in Liminality.",
+      "[https://wikiwiki.jp/lanotagame/Happyfulencer%21 Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 693,
+    "title": "Clotho and the stargazer",
+    "title_outside": "Clotho and the stargazer",
+    "artist": "CK",
+    "chapter": "Inf-375",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "2",
+      "acoustic": "6",
+      "ultra": "11",
+      "master": "13"
+    },
+    "time": "2:19",
+    "bpm": "230",
+    "version": "3.2.4 - April 16, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Eschatology",
+    "vocals": "None",
+    "chart_design": "",
+    "cover_art": "小奈きなこ & yoshimo",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1194"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Clotho_and_the_stargazer",
+    "Trivia": [
+      "This song's title in Japanese is \"クロートーと星の観測者\".",
+      "This song was an entry to [https://manbow.nothing.sh/event/event.cgi?action=More_def&num=215&event=104 BOFU2015], placing 129th.",
+      "This song can also be found in Arcaea and CHUNITHM.",
+      "[https://wikiwiki.jp/lanotagame/Clotho%20and%20the%20stargazer Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 694,
+    "title": "Haiboku no Altra Vita",
+    "title_outside": "Haiboku no Altra Vita",
+    "artist": "takehirotei",
+    "chapter": "Inf-376",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "6",
+      "acoustic": "10",
+      "ultra": "14+",
+      "master": "15+"
+    },
+    "time": "3:02",
+    "bpm": "115.5 - 231",
+    "version": "3.2.4 - April 23, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Classical Hardcore",
+    "vocals": "Natsuki Karin (夏色花梨)",
+    "chart_design": "",
+    "cover_art": "iyouka",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "2257"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Haiboku_no_Altra_Vita",
+    "Trivia": [
+      "This song's title in Japanese is \"敗北のAltra Vita\".",
+      "This song was made for osu! Locus 2025. ([https://osu.ppy.sh/beatmapsets/2412331#osu/5238830 Beatmap])",
+      "This song is available on takehirotei's [https://takehirotei.bandcamp.com/album/altra-vita Bandcamp].",
+      "[https://wikiwiki.jp/lanotagame/Haiboku%20no%20Altra%20Vita Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 695,
+    "title": "MAX OUT",
+    "title_outside": "MAX OUT",
+    "artist": "TARO",
+    "chapter": "Inf-377",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "9",
+      "ultra": "13",
+      "master": "14+"
+    },
+    "time": "2:13",
+    "bpm": "180",
+    "version": "3.2.4 - April 30, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Hardtek",
+    "vocals": "Samples",
+    "chart_design": "TearsD",
+    "cover_art": "",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1345"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/MAX_OUT",
+    "Trivia": [
+      "This song can be found on TARO's album \"[https://x.com/Zik_taro04/status/1847955932979900672 CRUDITY]\".",
+      "[https://wikiwiki.jp/lanotagame/MAX%20OUT Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 696,
+    "title": "The Cosmic Letter -Interstellar Re:UNION-",
+    "title_outside": "The Cosmic Letter -Interstellar Re:UNION-",
+    "artist": "Trina Lydia",
+    "chapter": "Inf-378",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "8",
+      "ultra": "12",
+      "master": "14"
+    },
+    "time": "3:08",
+    "bpm": "185",
+    "version": "3.2.4 - May 7, 2026",
+    "area": "Ritmo's Library",
+    "genre": "Space Adventure Pop",
+    "vocals": "None",
+    "chart_design": "",
+    "cover_art": "MM, Trina Lydia",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1685"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/The_Cosmic_Letter_-Interstellar_Re:UNION-",
+    "Trivia": [
+      "This song was an entry to [https://manbow.nothing.sh/event/event.cgi?action=More_def&num=222&event=149 BOF21], where it placed 263rd.",
+      "This song can be found on Disc 1 of [https://gdbg.tv/release/2025 GroundbreakinG 2025 BOF21 Compilation Album].",
+      "This song has a story, found on its BMS and SoundCloud pages:",
+      "[https://wikiwiki.jp/lanotagame/The%20Cosmic%20Letter%20-Interstellar%20Re：UNION- Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 697,
+    "title": "GHOST VS. GHOUL MASHUP",
+    "title_outside": "GHOST VS. GHOUL MASHUP",
+    "artist": "Camellia",
+    "chapter": "Event-105",
+    "category": "event",
+    "difficulty": {
+      "whisper": "6",
+      "acoustic": "11",
+      "ultra": "14",
+      "master": "15+"
+    },
+    "time": "3:16",
+    "bpm": "230",
+    "version": "3.2.6 - May 28, 2026",
+    "area": "Tracklist Mode",
+    "genre": "Speedcore",
+    "vocals": "None",
+    "chart_design": "HeavenEGHD",
+    "cover_art": "",
+    "notes": {
+      "whisper": "",
+      "acoustic": "1174",
+      "ultra": "1573",
+      "master": "2808"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/GHOST_VS._GHOUL_MASHUP",
+    "Trivia": [
+      "This song is a mashup of Camellia's songs \"GHOST\" and \"GHOUL\".",
+      "[https://wikiwiki.jp/lanotagame/GHOST%20VS.%20GHOUL%20MASHUP Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 698,
+    "title": "Embracing intelligences",
+    "title_outside": "Embracing intelligences",
+    "artist": "Camellia",
+    "chapter": "Event-106",
+    "category": "event",
+    "difficulty": {
+      "whisper": "3",
+      "acoustic": "6",
+      "ultra": "12",
+      "master": "13+"
+    },
+    "time": "3:01",
+    "bpm": "106",
+    "version": "3.2.6 - May 28, 2026",
+    "area": "Tracklist Mode",
+    "genre": "Tropical House",
+    "vocals": "None",
+    "chart_design": "TearsD",
+    "cover_art": "電鬼 & TOHRU MiTSUHASHi",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1369"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Embracing_intelligences",
+    "Legacy": {}
+  },
+  {
+    "id": 699,
+    "title": "Erasure: A World Without You",
+    "title_outside": "Erasure: A World Without You",
+    "artist": "Camellia",
+    "chapter": "Event-107",
+    "category": "event",
+    "difficulty": {
+      "whisper": "6",
+      "acoustic": "13",
+      "ultra": "15",
+      "master": "16"
+    },
+    "time": "2:47",
+    "bpm": "152-228",
+    "version": "3.2.6 - May 28, 2026",
+    "area": "Tracklist Mode",
+    "genre": "",
+    "vocals": "Camellia",
+    "chart_design": "",
+    "cover_art": "Ciro & Wsx (Julie)",
+    "notes": {
+      "whisper": "",
+      "acoustic": "1555",
+      "ultra": "1811",
+      "master": "2541"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Erasure:_A_World_Without_You",
+    "Trivia": [
+      "This song's title in Japanese is \"君欠く卋界と訂正錄\".",
+      "This is Camellia's second original song in Lanota after Wolves Standing Towards Enemies, and his third with a Master 16 difficulty chart (after Villain Virus).",
+      "Before playing this song in Event Challenge, a special animation will play similar to any boss song unlocked in the main chapters.",
+      "* Unlike in any main chapter boss song, there is no time limit and the animation can only be replayed via Event Challenge instead of Story Review.",
+      "[https://wikiwiki.jp/lanotagame/Erasure%EF%BC%9A%20A%20World%20Without%20You Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 700,
+    "title": "Hare Nochi Castanet",
+    "title_outside": "Hare Nochi Castanet",
+    "artist": "Goto feat. ricono & kotono",
+    "chapter": "Inf-379",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "3",
+      "acoustic": "6",
+      "ultra": "10",
+      "master": "13"
+    },
+    "time": "1:57",
+    "bpm": "115",
+    "version": "3.2.4 - May 14, 2026",
+    "area": "Ritmo's Library",
+    "genre": "",
+    "vocals": "ricono & kotono",
+    "chart_design": "",
+    "cover_art": "真墨 + BORSCH+",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": ""
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Hare_Nochi_Castanet",
+    "Trivia": [
+      "This song's title in Japanese is \"はれのちカスタネット\".",
+      "The full version of this song can be found on Goto's album \"死神少女がやってきた！ (Shinigami Girl has come!)\"([https://virtualnoiz.bandcamp.com/album/shinigami-girl-has-come Bandcamp]).",
+      "* This song uses a near identical jacket to Blow out, also from this album. The only difference is the color of the pastel scribble behind the album cover.",
+      "* This is the first time art has been reused for more than one song.",
+      "[https://wikiwiki.jp/lanotagame/Hare%20Nochi%20Castanet Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 701,
+    "title": "UNMEIRON",
+    "title_outside": "UNMEIRON",
+    "artist": "Luze feat. emew.",
+    "chapter": "Inf-380",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "4",
+      "acoustic": "7",
+      "ultra": "12",
+      "master": "15"
+    },
+    "time": "2:50",
+    "bpm": "170",
+    "version": "3.2.5 - May 21, 2026",
+    "area": "Ritmo's Library",
+    "genre": "CONDUCTOR",
+    "vocals": "emew.",
+    "chart_design": "",
+    "cover_art": "石王マサト",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1502"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/UNMEIRON",
+    "Trivia": [
+      "This song was an entry to [https://manbow.nothing.sh/event/event.cgi?action=More_def&num=205&event=88 konzertsaal - THE BMS OF FIGHTERS 2013].",
+      "This song's title in Japanese is \"運命論\".",
+      "This song can also be found in DanceRail3, ChainBeeT, Liminality and Shinobi Slash.",
+      "[https://wikiwiki.jp/lanotagame/UNMEIRON Japanese wiki]"
+    ],
+    "Legacy": {}
+  },
+  {
+    "id": 702,
+    "title": "Yumetsumugi no Wanderer",
+    "title_outside": "Yumetsumugi no Wanderer",
+    "artist": "irucaice × Tanchiky",
+    "chapter": "Inf-381",
+    "category": "subscription",
+    "difficulty": {
+      "whisper": "3",
+      "acoustic": "6",
+      "ultra": "12",
+      "master": "14"
+    },
+    "time": "2:28",
+    "bpm": "190",
+    "version": "3.2.6 - May 28, 2026",
+    "area": "Ritmo's Library",
+    "genre": "",
+    "vocals": "Hatsune Miku",
+    "chart_design": "小夜",
+    "cover_art": "西条",
+    "notes": {
+      "whisper": "",
+      "acoustic": "",
+      "ultra": "",
+      "master": "1520"
+    },
+    "source_url": "https://lanota.fandom.com/wiki/Yumetsumugi_no_Wanderer",
+    "Trivia": [
+      "This song was a winner of the O.N.G.E.K.I. FEAT Contest 2024.",
+      "This song's title in Japanese is \"夢紡ぎのワンダラー\".",
+      "This song can be found on irucaice's album \"[https://onprism-rec.com/icequarium6/ iceQuarium -Heaven-]\".",
+      "Like Happyfulencer! (also by irucaice), Hatsune Miku provides the vocals for this song despite not being credited.",
+      "[https://wikiwiki.jp/lanotagame/Yumetsumugi%20no%20Wanderer Japanese wiki]"
     ],
     "Legacy": {}
   }
